@@ -3,6 +3,17 @@ import grpc
 import numpy as np
 import videoinput_pb2
 import videoinput_pb2_grpc
+from ultralytics import YOLO
+
+
+# Load the YOLOv8 model
+model = YOLO('yolov8n-face.pt')
+
+
+def track_faces(model, frame):
+    results = model.track(frame, persist=True)
+
+    return results
 
 def run():
     channel = grpc.insecure_channel('127.0.0.1:50051')
@@ -17,10 +28,12 @@ def run():
             dBuf = np.frombuffer(res.datas, dtype=np.uint8)
 
             frame = cv2.imdecode(dBuf, cv2.IMREAD_COLOR)
-
+            results = track_faces(model, frame)
+            annotated_frame = results[0].plot()
 
             # Display the annotated frame
-            cv2.imshow("frame", frame)
+            cv2.imshow("YOLOv8 Tracking", annotated_frame)
+
 
             k = cv2.waitKey(1)
             if k == 27:
