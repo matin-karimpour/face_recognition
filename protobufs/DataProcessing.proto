@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+message ReplyData{
+	int32 msg = 1;
+}
+
+message RequestData{
+	bytes images = 1;
+}
+
+
+// responce server
+service DataProcessing{
+	rpc getStream (stream RequestData) returns (stream ReplyData) {}
+}
