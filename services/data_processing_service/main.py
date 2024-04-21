@@ -4,6 +4,16 @@ from concurrent import futures
 import DataProcessing_pb2
 import DataProcessing_pb2_grpc
 from io import BytesIO
+from imgbeddings import imgbeddings
+from PIL import Image
+
+# # loading the `imgbeddings`
+def embedd_image(cropped_image):
+
+    # calculating the embeddings
+    embedding = embed_model.to_embeddings(cropped_image)[0]
+    return embedding
+
 
 				
                         
@@ -22,7 +32,7 @@ class Greeter(DataProcessing_pb2_grpc.DataProcessingServicer):
             images = np.load(np_bytes, allow_pickle=True)
 
             for img in images:
-                print(img)
+                print(embedd_image(Image.fromarray(img)))
 
             yield DataProcessing_pb2.ReplyData(msg=1)
 
@@ -41,8 +51,8 @@ def serve():
 #============================================================
 # main
 #============================================================
-if __name__ == '__main__':    
+if __name__ == '__main__':
+    embed_model = imgbeddings()
     serve()
-
 
 
