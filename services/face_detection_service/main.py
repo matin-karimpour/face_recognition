@@ -4,6 +4,9 @@ import numpy as np
 import videoinput_pb2
 import videoinput_pb2_grpc
 from ultralytics import YOLO
+import DataProcessing_pb2
+import DataProcessing_pb2_grpc
+from io import BytesIO
 
 
 # Load the YOLOv8 model
@@ -15,9 +18,30 @@ def track_faces(model, frame):
 
     return results
 
+
+def get_crop_imeges(frame, boxes):
+    crop_images = []
+    if boxes is not None:
+        for box in boxes:
+
+            crop_obj = frame[int(box[1]):int(box[3]), int(box[0]):int(box[2])]
+            crop_obj= cv2.resize(crop_obj, (100,100))
+            crop_images.append(crop_obj)
+    
+    crop_images_array = np.array(crop_images)
+    crop_images_bytes = BytesIO()
+    np.save(crop_images_bytes, crop_images_array, allow_pickle=False)
+
+    yield DataProcessing_pb2.RequestData(images=crop_images_bytes.getvalue())
+
+
 def run():
     channel = grpc.insecure_channel('127.0.0.1:50051')
     videoinput_stub = videoinput_pb2_grpc.VideoInputStub(channel)
+
+    DataProcessing_channel = grpc.insecure_channel('127.0.0.1:50052')
+    DataProcessing_stub = DataProcessing_pb2_grpc.DataProcessingStub(DataProcessing_channel)
+
 
     try:
         message = []
@@ -30,10 +54,17 @@ def run():
             frame = cv2.imdecode(dBuf, cv2.IMREAD_COLOR)
             results = track_faces(model, frame)
             annotated_frame = results[0].plot()
+            track_ids = np.array(results[0].boxes.id.int().cpu().tolist())
+
+            boxes = results[0].boxes.xyxy.cpu().tolist()
+            
+            ress = DataProcessing_stub.getStream(get_crop_imeges(frame, boxes))
+            for res1 in ress:
+                print(res1)
+
 
             # Display the annotated frame
             cv2.imshow("YOLOv8 Tracking", annotated_frame)
-
 
             k = cv2.waitKey(1)
             if k == 27:
