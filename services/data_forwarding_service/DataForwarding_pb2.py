@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14\x44\x61taForwarding.proto\"\x1b\n\x0cReplyForward\x12\x0b\n\x03msg\x18\x01 \x01(\x05\"H\n\x0eRequestForward\x12\x0e\n\x06images\x18\x01 \x01(\x0c\x12\x11\n\ttrack_ids\x18\x02 \x01(\x0c\x12\x13\n\x0b\x66rame_index\x18\x03 \x01(\x05\x32?\n\x0e\x44\x61taForwarding\x12-\n\tgetStream\x12\x0f.RequestForward\x1a\r.ReplyForward\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14\x44\x61taForwarding.proto\"\x1b\n\x0cReplyForward\x12\x0b\n\x03msg\x18\x01 \x01(\x05\"H\n\x0eRequestForward\x12\x0e\n\x06images\x18\x01 \x01(\x0c\x12\x11\n\ttrack_ids\x18\x02 \x01(\x05\x12\x13\n\x0b\x66rame_index\x18\x03 \x01(\x05\x32?\n\x0e\x44\x61taForwarding\x12-\n\tgetStream\x12\x0f.RequestForward\x1a\r.ReplyForward\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)

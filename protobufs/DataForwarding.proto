@@ -6,7 +6,7 @@ message ReplyForward{
 
 message RequestForward{
 	bytes images = 1;
-	bytes track_ids = 2;
+	int32 track_ids = 2;
 	int32 frame_index = 3;
 }
 

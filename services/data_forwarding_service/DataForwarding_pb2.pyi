@@ -16,6 +16,6 @@ class RequestForward(_message.Message):
     TRACK_IDS_FIELD_NUMBER: _ClassVar[int]
     FRAME_INDEX_FIELD_NUMBER: _ClassVar[int]
     images: bytes
-    track_ids: bytes
+    track_ids: int
     frame_index: int
-    def __init__(self, images: _Optional[bytes] = ..., track_ids: _Optional[bytes] = ..., frame_index: _Optional[int] = ...) -> None: ...
+    def __init__(self, images: _Optional[bytes] = ..., track_ids: _Optional[int] = ..., frame_index: _Optional[int] = ...) -> None: ...
