@@ -1,0 +1,6 @@
+**/__pycache__/
+file/*
+
+*.jpg
+*.mp4
+*.json
