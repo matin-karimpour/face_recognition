@@ -1,15 +1,19 @@
 syntax = "proto3";
 
-message ReplyData{
+message Replyresult{
 	int32 msg = 1;
 }
 
-message RequestData{
+message RequestFace{
 	bytes images = 1;
+	string action = 2;
+	string name = 3;
+	bytes track_ids = 4;
+	int32 frame_index = 5;
 }
 
 
 // responce server
 service DataProcessing{
-	rpc getStream (stream RequestData) returns (stream ReplyData) {}
+	rpc getStream (RequestFace) returns (Replyresult) {}
 }

@@ -15,10 +15,10 @@ class DataProcessingStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.getStream = channel.stream_stream(
+        self.getStream = channel.unary_unary(
                 '/DataProcessing/getStream',
-                request_serializer=DataProcessing__pb2.RequestData.SerializeToString,
-                response_deserializer=DataProcessing__pb2.ReplyData.FromString,
+                request_serializer=DataProcessing__pb2.RequestFace.SerializeToString,
+                response_deserializer=DataProcessing__pb2.Replyresult.FromString,
                 )
 
 
@@ -26,7 +26,7 @@ class DataProcessingServicer(object):
     """responce server
     """
 
-    def getStream(self, request_iterator, context):
+    def getStream(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -35,10 +35,10 @@ class DataProcessingServicer(object):
 
 def add_DataProcessingServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'getStream': grpc.stream_stream_rpc_method_handler(
+            'getStream': grpc.unary_unary_rpc_method_handler(
                     servicer.getStream,
-                    request_deserializer=DataProcessing__pb2.RequestData.FromString,
-                    response_serializer=DataProcessing__pb2.ReplyData.SerializeToString,
+                    request_deserializer=DataProcessing__pb2.RequestFace.FromString,
+                    response_serializer=DataProcessing__pb2.Replyresult.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -52,7 +52,7 @@ class DataProcessing(object):
     """
 
     @staticmethod
-    def getStream(request_iterator,
+    def getStream(request,
             target,
             options=(),
             channel_credentials=None,
@@ -62,8 +62,8 @@ class DataProcessing(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.stream_stream(request_iterator, target, '/DataProcessing/getStream',
-            DataProcessing__pb2.RequestData.SerializeToString,
-            DataProcessing__pb2.ReplyData.FromString,
+        return grpc.experimental.unary_unary(request, target, '/DataProcessing/getStream',
+            DataProcessing__pb2.RequestFace.SerializeToString,
+            DataProcessing__pb2.Replyresult.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
