@@ -1,7 +1,9 @@
 syntax = "proto3";
 
 message Replyresult{
-	int32 msg = 1;
+	bytes image = 1;
+	int32 track_id = 2;
+	int32 msg = 3;
 }
 
 message RequestFace{
