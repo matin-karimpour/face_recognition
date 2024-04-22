@@ -4,14 +4,18 @@ from typing import ClassVar as _ClassVar, Optional as _Optional
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
-class ReplyData(_message.Message):
+class Replyresult(_message.Message):
     __slots__ = ("msg",)
     MSG_FIELD_NUMBER: _ClassVar[int]
     msg: int
     def __init__(self, msg: _Optional[int] = ...) -> None: ...
 
-class RequestData(_message.Message):
-    __slots__ = ("images",)
+class RequestFace(_message.Message):
+    __slots__ = ("images", "action", "name")
     IMAGES_FIELD_NUMBER: _ClassVar[int]
+    ACTION_FIELD_NUMBER: _ClassVar[int]
+    NAME_FIELD_NUMBER: _ClassVar[int]
     images: bytes
-    def __init__(self, images: _Optional[bytes] = ...) -> None: ...
+    action: str
+    name: str
+    def __init__(self, images: _Optional[bytes] = ..., action: _Optional[str] = ..., name: _Optional[str] = ...) -> None: ...
