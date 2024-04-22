@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+message ReplyData{
+	bytes faces = 1;
+	bytes ids = 2;
+}
+
+message RequestData{
+	bytes frame = 1;
+}
+
+
+// responce server
+service FaceDetection{
+	rpc getStream (RequestData) returns (ReplyData) {}
+}
