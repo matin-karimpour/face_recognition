@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+message ReplyForward{
+	int32 msg = 1;
+}
+
+message RequestForward{
+	bytes images = 1;
+	bytes track_ids = 2;
+	int32 frame_index = 3;
+}
+
+
+// responce server
+service DataForwarding{
+	rpc getStream (RequestForward) returns (ReplyForward) {}
+}
