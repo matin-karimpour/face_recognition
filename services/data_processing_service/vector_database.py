@@ -1,13 +1,6 @@
 from qdrant_client import QdrantClient
 from qdrant_client.models import VectorParams, Distance
-import numpy as np
 from qdrant_client.models import PointStruct
-from ultralytics import YOLO
-from glob import glob
-import time
-import cv2
-from imgbeddings import imgbeddings
-from PIL import Image
 
 
 
