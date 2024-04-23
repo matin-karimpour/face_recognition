@@ -6,4 +6,48 @@ services:
     ports:
       - 6333:6333
       - 6334:6334
+    network_mode: host
+  
+  video-input:
+    build: ./services/video_input_service
+    ports:
+      - 50051:50051
+    volumes:
+      - ./files/:/service/files/
 
+  
+  data_processing:
+    build: ./services/data_processing_service
+    ports:
+      - 50052:50052
+    depends_on:
+      - qdrant
+    network_mode: host
+
+  data_forwarding:
+    build: ./services/data_forwarding_service
+    ports:
+      - 50054:50054
+    volumes:
+      - ./log/:/service/data_forwarding_service/log/
+    
+    network_mode: host
+    
+
+  face_detection:
+    build: ./services/face_detection_service
+    ports:
+      - 50053:50053
+    network_mode: host
+
+  webapp:
+    build: ./services/webapp
+    ports:
+      - 5000:5000
+    depends_on:
+      - qdrant
+      - face_detection
+      - data_forwarding
+      - video-input
+      - data_processing
+    network_mode: host
