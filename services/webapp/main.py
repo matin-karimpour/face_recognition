@@ -19,3 +19,5 @@ async def detection(detect: Detect):
 async def create_item():
     client.run('/service/files/face-3.jpg', "insert")
     client.run('/service/files/task-video.mp4', "search")
+
+    return {"message": "Searching..."}

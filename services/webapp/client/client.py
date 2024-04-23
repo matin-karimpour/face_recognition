@@ -59,20 +59,8 @@ def run(msg, action):
                 DataForwarding_stub.getStream(RequestForward)
                 print(message_data.track_id)
 
-            # if message_data.msg == 1:
-            #     repeat_find+=1
-            # else:
-            #     repeat_find = 0
-
-            # if repeat_find>=3:
-            #     print("find")
-
-            # Display the annotated frame
-            cv2.imshow("frame", frame)
-
-            k = cv2.waitKey(1)
-            if k == 27:
-                break
+           
+            
 
     except grpc.RpcError as e:
         print(e)

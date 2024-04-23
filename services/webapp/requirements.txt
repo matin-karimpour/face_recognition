@@ -3,3 +3,6 @@ grpcio-tools==1.62.2
 uvicorn[standard]==0.29.0
 fastapi[all]==0.110.2
 protobuf==4.25.3
+opencv-python==4.9.0.80
+pillow==10.3.0
+
