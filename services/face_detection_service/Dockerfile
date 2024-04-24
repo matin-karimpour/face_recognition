@@ -17,12 +17,13 @@ RUN apt-get update || true && apt-get upgrade -y &&\
 
 
 RUN mkdir /service
-COPY . /service/face_detection_service/
+COPY ./requirements.txt /service/face_detection_service/requirements.txt
 
 
 WORKDIR /service/face_detection_service
 RUN pip install -r requirements.txt
 
+COPY . /service/face_detection_service/
 
 EXPOSE 50053
 ENTRYPOINT [ "python", "main.py" ]
