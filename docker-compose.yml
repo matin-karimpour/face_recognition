@@ -34,6 +34,7 @@ services:
     network_mode: host
     
 
+
   face_detection:
     build: ./services/face_detection_service
     ports:
@@ -51,3 +52,6 @@ services:
       - video-input
       - data_processing
     network_mode: host
+    volumes:
+      - ./files/:/service/files/
+      - ./log/:/service/log/

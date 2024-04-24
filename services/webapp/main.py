@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from client import client
-
+from fastapi.responses import StreamingResponse
+import io
+import cv2
 class Detect(BaseModel):
     source: str
     action: str | None = None
@@ -17,7 +19,8 @@ async def detection(detect: Detect):
 
 @app.get("/quickstart/")
 async def create_item():
-    client.run('/service/files/face-3.jpg', "insert")
-    client.run('/service/files/task-video.mp4', "search")
-
-    return {"message": "Searching..."}
+    for i in client.run('/service/files/face-3.jpg', "insert"):
+        pass
+      
+    return StreamingResponse(client.run('/service/files/task-video.mp4', "search") , media_type="text/html")
+    

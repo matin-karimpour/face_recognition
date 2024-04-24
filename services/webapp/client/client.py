@@ -33,9 +33,7 @@ def run(msg, action):
         message = []
         message.append(videoinput_pb2.Request(msg=msg))
         responses = videoinput_stub.getStream(iter(message))
-        time_ids = {}
-        out_ids = {}
-        repeat_find = 0
+        init = True
         for index, res in enumerate(responses):
             dBuf = np.frombuffer(res.datas, dtype=np.uint8)
 
@@ -58,8 +56,13 @@ def run(msg, action):
                                                   images=message_data.image)
                 DataForwarding_stub.getStream(RequestForward)
                 print(message_data.track_id)
-
-           
+                yield f"<br> POI found in {index/25}s Please Check log directory"
+            else: 
+                if init:
+                    init = False
+                    yield "Searching... <br> If POI found We will notify you"
+                else:
+                    yield ""
             
 
     except grpc.RpcError as e:
@@ -67,5 +70,8 @@ def run(msg, action):
         # break
 
 if __name__ == "__main__":
-    run('/service/files/face-3.jpg', "insert")
-    run('/service/files/task-video.mp4', "search")
+
+    for i in run('/service/files/face-3.jpg', "insert"):
+        pass
+    for i in run('/service/files/task-video.mp4', "search"):
+        print(i)

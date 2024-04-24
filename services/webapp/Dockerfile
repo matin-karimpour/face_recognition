@@ -21,11 +21,6 @@ WORKDIR /code
 COPY ./requirements.txt /code/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-RUN apt-get update && \
-    apt-get install -y libqt5gui5 && \
-    rm -rf /var/lib/apt/lists/*
-ENV QT_DEBUG_PLUGINS=1
-
 COPY . /code/
 EXPOSE 5000
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]
