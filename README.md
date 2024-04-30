@@ -1,6 +1,6 @@
 # Face Recognition
 
-This contains face recognition task for an interview. System architecture is microservices which divided into following services:
+This contains face recognition task which system architecture is microservices which divided into following services:
 - Video Input Service: Read video file and send making pre-process on raw frame and
 then send processed frames to the second service.
 - Face Detection Service: Receive pre-processed frames NumPy data and detect faces of
