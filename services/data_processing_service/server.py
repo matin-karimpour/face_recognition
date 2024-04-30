@@ -1,11 +1,14 @@
+from concurrent import futures
+from io import BytesIO
+
 import grpc
 import numpy as np
-from concurrent import futures
+
 import DataProcessing_pb2
 import DataProcessing_pb2_grpc
-from io import BytesIO
-from vector_database import VectorDatabase
 from embeding import EmbedImage
+from vector_database import VectorDatabase
+
 
 class FaceDetectServer(DataProcessing_pb2_grpc.DataProcessingServicer):
 
@@ -13,25 +16,21 @@ class FaceDetectServer(DataProcessing_pb2_grpc.DataProcessingServicer):
     def __init__(self):
         self.embed_model = EmbedImage()
         self.vd = VectorDatabase()
-        
-        
 
     # ==========
     def getStream(self, request, context):
-
-        
 
         np_bytes = BytesIO(request.images)
         images = np.load(np_bytes, allow_pickle=False)
 
         np_bytes = BytesIO(request.track_ids)
         track_ids = np.load(np_bytes, allow_pickle=False)
-       
+
         if request.action == "search":
             find = []
             for idx, img in enumerate(images):
 
-                if len(track_ids)>0:
+                if len(track_ids) > 0:
                     id = track_ids[idx]
                 else:
                     id = -1
@@ -48,8 +47,8 @@ class FaceDetectServer(DataProcessing_pb2_grpc.DataProcessingServicer):
 
             if 1 in find:
                 msg = 1
-                
-            else :
+
+            else:
                 msg = 0
                 track_id = -1
                 find_img = np.array(img)
@@ -57,17 +56,15 @@ class FaceDetectServer(DataProcessing_pb2_grpc.DataProcessingServicer):
             find_img_byte = BytesIO()
             np.save(find_img_byte, find_img, allow_pickle=False)
             return DataProcessing_pb2.Replyresult(msg=msg, track_id=track_id, image=find_img_byte.getvalue())
-        
+
         elif request.action == "insert":
             print(request.name)
             for img in images:
-            
-                self.vd.insert(self.embed_model.embedd_image(img), name=request.name, id=int(request.name.split("-")[-1]))
+                self.vd.insert(self.embed_model.embedd_image(img), name=request.name,
+                               id=int(request.name.split("-")[-1]))
             find_img_byte = BytesIO()
             np.save(find_img_byte, np.array(img), allow_pickle=False)
             return DataProcessing_pb2.Replyresult(msg=2, track_id=-1, image=find_img_byte.getvalue())
-
-
 
 
 def serve():

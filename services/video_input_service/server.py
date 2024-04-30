@@ -1,7 +1,8 @@
-import cv2
-import time
-import grpc
 from concurrent import futures
+
+import cv2
+import grpc
+
 import videoinput_pb2
 import videoinput_pb2_grpc
 
@@ -14,7 +15,6 @@ class Greeter(videoinput_pb2_grpc.VideoInputServicer):
 
     # ==========
     def getStream(self, request_iterator, context):
-        
 
         for req in request_iterator:
 
@@ -33,7 +33,7 @@ class Greeter(videoinput_pb2_grpc.VideoInputServicer):
                         return
 
                     yield videoinput_pb2.Reply(datas=buf.tobytes())
-            
+
             else:
                 frame = cv2.imread(req.msg)
                 frame = cv2.resize(frame, (1280, 720))

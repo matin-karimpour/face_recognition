@@ -1,13 +1,17 @@
-import grpc
-import numpy as np
-from concurrent import futures
-import DataForwarding_pb2
-import DataForwarding_pb2_grpc
-from io import BytesIO
 import json
 import os
+from concurrent import futures
 from datetime import datetime
+from io import BytesIO
+
 import cv2
+import grpc
+import numpy as np
+
+import DataForwarding_pb2
+import DataForwarding_pb2_grpc
+
+
 class FaceDetectServer(DataForwarding_pb2_grpc.DataForwardingServicer):
 
     # ==========
@@ -16,27 +20,25 @@ class FaceDetectServer(DataForwarding_pb2_grpc.DataForwardingServicer):
         self.image_log_dir = os.path.join(self.log_dir, "images/")
         print(self.image_log_dir)
         os.makedirs(os.path.dirname(self.image_log_dir), exist_ok=True)
-        self.log_path = os.path.join(self.log_dir,"log.json")
+        self.log_path = os.path.join(self.log_dir, "log.json")
         if not os.path.exists(self.log_path):
             os.mknod(self.log_path)
-        
-        
 
     # ==========
     def getStream(self, request, context):
-        
+
         with open(self.log_path, "r") as outfile:
             try:
                 log = json.load(outfile)
             except:
                 log = {}
-            
+
         np_bytes = BytesIO(request.images)
         images = np.load(np_bytes, allow_pickle=False)
         iamge_path = self.save_image(img=images, track_id=request.track_ids)
-        
-        log_id = log.get(str(request.track_ids), {"frames":[], "images":[]})
-        log_id["frames"].append(str(request.frame_index/25)+" s")
+
+        log_id = log.get(str(request.track_ids), {"frames": [], "images": []})
+        log_id["frames"].append(str(request.frame_index / 25) + " s")
 
         log_id["images"].append(str(iamge_path))
         log_id["images"] = list(set(log_id["images"]))
@@ -44,9 +46,9 @@ class FaceDetectServer(DataForwarding_pb2_grpc.DataForwardingServicer):
 
         with open(self.log_path, "w") as outfile:
             json.dump(log, outfile)
-        
+
         return DataForwarding_pb2.ReplyForward(msg=1)
-    
+
     def save_image(self, img, track_id):
         dir_time = datetime.now().strftime("%m_%d_%Y")
         output_dir_path = os.path.join(self.image_log_dir, dir_time)
@@ -54,17 +56,13 @@ class FaceDetectServer(DataForwarding_pb2_grpc.DataForwardingServicer):
         path = os.path.join(output_dir_path, dir_time)
         os.makedirs(path, exist_ok=True)
         path = os.path.join(path, f"{track_id}.jpg")
-        
+
         if os.path.exists(path):
             return path
         else:
             print("saved")
             cv2.imwrite(path, img=img)
             return path
-
-        
-
-
 
 
 def serve():
